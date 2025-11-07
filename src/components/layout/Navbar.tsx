@@ -3,7 +3,6 @@ import { Button } from "@/components/ui/button";
 import {
   NavigationMenu,
   NavigationMenuItem,
-  NavigationMenuLink,
   NavigationMenuList,
 } from "@/components/ui/navigation-menu";
 import {
@@ -12,10 +11,11 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { ModeToggle } from "./mode-toggle";
+import { Link } from "react-router";
 
 // Navigation links array to be used in both desktop and mobile menus
 const navigationLinks = [
-  { href: "/", label: "Home", active: true },
+  { href: "/", label: "Home"},
   { href: "/about", label: "About" },
 ];
 
@@ -65,36 +65,34 @@ export default function Navbar() {
                 <NavigationMenuList className="flex-col items-start gap-0 md:gap-2">
                   {navigationLinks.map((link, index) => (
                     <NavigationMenuItem key={index} className="w-full">
-                      <NavigationMenuLink
-                        href={link.href}
+                      <Link
+                        to={link.href}
                         className="py-1.5"
-                        active={link.active}
                       >
                         {link.label}
-                      </NavigationMenuLink>
+                      </Link>
                     </NavigationMenuItem>
-                  ))}
+                  ))} 
                 </NavigationMenuList>
               </NavigationMenu>
             </PopoverContent>
           </Popover>
           {/* Main nav */}
           <div className="flex items-center gap-6">
-            <a href="#" className="text-primary hover:text-primary/90">
+            <Link to="/" className="text-primary hover:text-primary/90">
               <Logo />
-            </a>
+            </Link>
             {/* Navigation menu */}
             <NavigationMenu className="max-md:hidden">
               <NavigationMenuList className="gap-2">
                 {navigationLinks.map((link, index) => (
                   <NavigationMenuItem key={index}>
-                    <NavigationMenuLink
-                      active={link.active}
-                      href={link.href}
-                      className="text-muted-foreground hover:text-primary py-1.5 font-medium"
+                    <Link
+                      to={link.href}
+                      className="text-muted-foreground hover:text-foreground py-1.5 font-medium  p-2"
                     >
                       {link.label}
-                    </NavigationMenuLink>
+                    </Link>
                   </NavigationMenuItem>
                 ))}
               </NavigationMenuList>
@@ -105,7 +103,7 @@ export default function Navbar() {
         <div className="flex items-center gap-2">
           <ModeToggle />
           <Button asChild variant="ghost" size="sm" className="text-sm">
-            <a href="#">Sign In</a>
+            <Link to="/login">Login</Link>
           </Button>
         </div>
       </div>

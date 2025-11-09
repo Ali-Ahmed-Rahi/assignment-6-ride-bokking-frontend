@@ -9,31 +9,53 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
-// import { useLoginMutation } from "@/redux/features/auth/auth.api";
-import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
-import { Link, } from "react-router";
-// import { toast } from "sonner";
+import { useLoginMutation } from "@/redux/features/auth/auth.api";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { loginFormSchema, LoginFormValues } from "@/components/modules/Authentication/schemas/loginFormSchema";
+import { Link } from "react-router";
+import { toast } from "sonner";
 
-export function LoginForm({
-  className,
-  ...props
-}: React.HTMLAttributes<HTMLDivElement>) {
-  // const navigate = useNavigate();
-  const form = useForm();
-  // const [login] = useLoginMutation();
-  const onSubmit: SubmitHandler<FieldValues> = async (data) => {
-    console.log(data);
-    // try {
-    //   const res = await login(data).unwrap(); 
-    //   console.log(res);
-    // } catch (err) {
-    //   console.error(err);
+export function LoginForm({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
+  const [login] = useLoginMutation();
 
-    //   if (err.status === 401) {
-    //     toast.error("Your account is not verified");
-    //     navigate("/verify", { state: data.email });
-    //   }
-    // }
+  const form = useForm<LoginFormValues>({
+    resolver: zodResolver(loginFormSchema),
+    defaultValues: {
+      email: "",
+      password: "",
+    },
+  });
+
+  const { setError, clearErrors } = form;
+
+  const onSubmit = async (data: LoginFormValues) => {
+    clearErrors("password");
+    try {
+      const result = await login(data).unwrap();
+      toast.success("Login successful");
+      console.log("Login result:", result);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (err: any) {
+      const status = err?.status;
+      const message =
+        err?.data?.message ||
+        err?.data ||
+        err?.error ||
+        "Login failed";
+
+      if (status === 401 || /password/i.test(String(message))) {
+        setError("password", {
+          type: "server",
+          message:
+            typeof message === "string" ? message : "Password didn't match",
+        });
+        return;
+      }
+
+      toast.error(typeof message === "string" ? message : "Something went wrong");
+      console.error(err);
+    }
   };
 
   return (
@@ -44,6 +66,7 @@ export function LoginForm({
           Enter your email below to login to your account
         </p>
       </div>
+
       <div className="grid gap-6">
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
@@ -54,11 +77,7 @@ export function LoginForm({
                 <FormItem>
                   <FormLabel>Email</FormLabel>
                   <FormControl>
-                    <Input
-                      placeholder="john@example.com"
-                      {...field}
-                      value={field.value || ""}
-                    />
+                    <Input placeholder="john@example.com" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -72,12 +91,7 @@ export function LoginForm({
                 <FormItem>
                   <FormLabel>Password</FormLabel>
                   <FormControl>
-                    <Input
-                      type="password"
-                      placeholder="********"
-                      {...field}
-                      value={field.value || ""}
-                    />
+                    <Input type="password" placeholder="********" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -96,14 +110,11 @@ export function LoginForm({
           </span>
         </div>
 
-        <Button
-          type="button"
-          variant="outline"
-          className="w-full cursor-pointer"
-        >
+        <Button type="button" variant="outline" className="w-full cursor-pointer">
           Login with Google
         </Button>
       </div>
+
       <div className="text-center text-sm">
         Don&apos;t have an account?{" "}
         <Link to="/register" replace className="underline underline-offset-4">

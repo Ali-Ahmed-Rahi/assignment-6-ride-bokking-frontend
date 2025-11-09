@@ -1,31 +1,29 @@
 import { Button } from "@/components/ui/button";
-import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
 import { cn } from "@/lib/utils";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import Password from "@/components/ui/Password";
 import { useForm } from "react-hook-form";
 import { Input } from "@/components/ui/input";
-import z from "zod"
-import { zodResolver } from "@hookform/resolvers/zod"
-
-
-const registerFormSchema = z.object({
-  name: z.string()
-    .min(2, { message: "Name must be at least 2 characters long" })
-    .max(50, { message: "Name must be at most 50 characters long" }),
-
-  email: z.string()
-    .email({ message: "Please enter a valid email address" }),
-
-  password: z.string()
-    .min(6, { message: "Password must be at least 6 characters long" })
-    .max(50, { message: "Password must be at most 50 characters long" }),
-
-  confirmPassword: z.string()
-}).refine((data) => data.password === data.confirmPassword, {
-  message: "Passwords do not match",
-  path: ["confirmPassword"],
-});
+import z from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useRegisterMutation } from "@/redux/features/auth/auth.api";
+import { toast } from "sonner";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { registerFormSchema } from "./schemas/registerFormSchema";
 
 
 export function RegisterForm({
@@ -33,25 +31,38 @@ export function RegisterForm({
   ...props
 }: React.HTMLAttributes<HTMLDivElement>) {
 
-   const form = useForm<z.infer<typeof registerFormSchema>>({
+  const navigate=useNavigate()
+  const [register] = useRegisterMutation();
+
+  const form = useForm<z.infer<typeof registerFormSchema>>({
     resolver: zodResolver(registerFormSchema),
     defaultValues: {
       name: "",
-      email:"",
-      password:"",
-      confirmPassword:""
+      email: "",
+      password: "",
+      confirmPassword: "",
+      role: "rider", 
     },
-  })
+  });
 
+  const onSubmit = async (data: z.infer<typeof registerFormSchema>) => {
+    const userInfo = {
+      name: data.name,
+      email: data.email,
+      password: data.password,
+      role: data.role,
+    };
 
-  const onSubmit = (data:z.infer<typeof registerFormSchema>) => {
-    const userInfo={
-      name:data.name,
-      email:data.email,
-      password:data.password
+    try {
+      const result = await register(userInfo).unwrap();
+      console.log(result);
+      toast.success("User Created Successfully");
+      navigate("/")
+      
+    } catch (error) {
+      console.log(error);
+      toast.error("Registration failed");
     }
-    console.log(userInfo);
-     
   };
 
   return (
@@ -66,7 +77,9 @@ export function RegisterForm({
       <div className="grid gap-6">
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+            {/* Name */}
             <FormField
+              control={form.control}
               name="name"
               render={({ field }) => (
                 <FormItem>
@@ -74,15 +87,14 @@ export function RegisterForm({
                   <FormControl>
                     <Input placeholder="John Doe" {...field} />
                   </FormControl>
-                  <FormDescription className="sr-only">
-                    This is your public display name.
-                  </FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
             />
+
+            {/* Email */}
             <FormField
-              // control={form.control}
+              control={form.control}
               name="email"
               render={({ field }) => (
                 <FormItem>
@@ -94,15 +106,41 @@ export function RegisterForm({
                       {...field}
                     />
                   </FormControl>
-                  <FormDescription className="sr-only">
-                    This is your public display name.
-                  </FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
             />
+
+            {/* Role Select */}
             <FormField
-              // control={form.control}
+              control={form.control}
+              name="role"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Role</FormLabel>
+                  <Select
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                  >
+                    <FormControl>
+                      <SelectTrigger className="w-full">
+                        <SelectValue placeholder="Select a role" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      <SelectItem value="rider">Rider</SelectItem>
+                      <SelectItem value="driver">Driver</SelectItem>
+                      <SelectItem value="admin">Admin</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            {/* Password */}
+            <FormField
+              control={form.control}
               name="password"
               render={({ field }) => (
                 <FormItem>
@@ -110,15 +148,14 @@ export function RegisterForm({
                   <FormControl>
                     <Password {...field} />
                   </FormControl>
-                  <FormDescription className="sr-only">
-                    This is your public display name.
-                  </FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
             />
+
+            {/* Confirm Password */}
             <FormField
-              // control={form.control}
+              control={form.control}
               name="confirmPassword"
               render={({ field }) => (
                 <FormItem>
@@ -126,13 +163,11 @@ export function RegisterForm({
                   <FormControl>
                     <Password {...field} />
                   </FormControl>
-                  <FormDescription className="sr-only">
-                    This is your public display name.
-                  </FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
             />
+
             <Button type="submit" className="w-full">
               Submit
             </Button>

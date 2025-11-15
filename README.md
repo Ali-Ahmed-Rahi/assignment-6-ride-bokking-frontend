@@ -1,60 +1,51 @@
 # Ride Booking Platform (Uber/Pathao Clone)
 
-A **full-stack ride booking application** built with **React, Redux Toolkit Query, Node.js, Express, and MongoDB**.  
-This project supports **role-based functionality** for **Riders, Drivers, and Admins**, allowing ride management, driver approval/suspension, and real-time updates.
+**Live Demo:** [Your Frontend Deployment Link](https://ride-booking-frontend-blue.vercel.app/api)  
+
+A **full-stack ride booking platform** where users can book rides, drivers can accept rides, and admins can manage drivers and rides. Built with **React, Redux Toolkit Query, Node.js, Express, and MongoDB**, the platform supports **role-based access** and **real-time updates**.
 
 ---
 
-## Table of Contents
+## Project Overview
 
-- [Features](#features)  
-- [Tech Stack](#tech-stack)  
-- [Project Structure](#project-structure)  
-- [Setup Instructions](#setup-instructions)  
-  - [Backend](#backend)  
-  - [Frontend](#frontend)  
-- [API Endpoints](#api-endpoints)  
-- [Screenshots](#screenshots)  
-- [License](#license)  
+This project replicates core functionalities of ride-hailing apps like Uber or Pathao:
+
+- Riders can book rides and view history  
+- Drivers can accept/reject rides, toggle online status, and view earnings  
+- Admins can approve/suspend drivers, view all rides, and manage users  
+
+It’s fully **responsive** and supports both **desktop and mobile** views.
 
 ---
 
-## Features
+## Project Features
 
 ### Rider
-
 - Sign up and login  
-- Book rides  
-- View ride history  
-- Check balance  
+- Book rides and track ride status  
+- View ride history and balance  
 
 ### Driver
-
 - Sign up and login  
-- Accept or reject rides  
 - Toggle online/offline status  
-- View ride history and earnings  
-- Admin can approve or suspend drivers  
+- Accept or reject rides  
+- Admin approval required for full access  
 
 ### Admin
-
 - View all drivers and riders  
 - Approve or suspend drivers  
 - Manage rides and user statuses  
 
-### Additional Features
-
+### Other Features
 - Real-time updates using **polling**  
-- Pagination and filtering for large datasets  
-- Role-based authorization for secure access  
-- Responsive design (desktop and mobile) using Tailwind CSS  
+- Filtering and pagination for large datasets  
+- Responsive design using **Tailwind CSS**  
 
 ---
 
-## Tech Stack
+## Technology Stack
 
 **Frontend:**
-
 - React.js + TypeScript  
 - Redux Toolkit & RTK Query  
 - Tailwind CSS & DaisyUI  
@@ -62,21 +53,22 @@ This project supports **role-based functionality** for **Riders, Drivers, and Ad
 - Axios  
 
 **Backend:**
-
 - Node.js + Express.js  
 - MongoDB + Mongoose  
 - JWT Authentication  
-- Role-based access control  
+- Role-based Access Control  
 
-**Tools & Deployment:**
-
+**Deployment:**
 - Vercel (Frontend)  
 - Node/Express server (Backend)  
-- Postman (API testing)  
 
 ---
 
-## Project Structure
+## Setup Instructions
 
 ### Backend
 
+1. Clone repository:
+```bash
+git clone <https://github.com/Ali-Ahmed-Rahi/assignment-05-backend>
+cd backend

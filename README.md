@@ -1,6 +1,6 @@
 # Ride Booking Platform (Uber/Pathao Clone)
 
-**Live Demo:** [Your Frontend Deployment Link](https://ride-booking-frontend-blue.vercel.app/api)  
+**Live Demo:** [Deployment Link](https://ride-booking-frontend-blue.vercel.app/api)  
 
 A **full-stack ride booking platform** where users can book rides, drivers can accept rides, and admins can manage drivers and rides. Built with **React, Redux Toolkit Query, Node.js, Express, and MongoDB**, the platform supports **role-based access** and **real-time updates**.
 
@@ -70,5 +70,5 @@ It’s fully **responsive** and supports both **desktop and mobile** views.
 
 1. Clone repository:
 ```bash
-git clone <https://github.com/Ali-Ahmed-Rahi/assignment-05-backend>
+git clone https://github.com/Ali-Ahmed-Rahi/assignment-05-backend
 cd backend

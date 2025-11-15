@@ -12,14 +12,23 @@ import {
 } from "@/components/ui/popover";
 import { ModeToggle } from "./mode-toggle";
 import { Link } from "react-router";
+import { useGetMeQuery } from "@/redux/features/auth/auth.api";
+import { LogoutButton } from "../ui/Logout";
+import { role } from "@/constants/role";
 
-// Navigation links array to be used in both desktop and mobile menus
+
 const navigationLinks = [
-  { href: "/", label: "Home"},
-  { href: "/about", label: "About" },
+  { href: "/", label: "Home" , role:"PUBLIC"},
+  { href: "/about", label: "About", role: "PUBLIC"},
+  { href: "/admin", label: "Dashboard", role:role.admin},
+  { href: "/driver", label: "Dashboard", role:role.driver},
+  { href: "/rider", label: "Dashboard", role:role.rider},
 ];
 
 export default function Navbar() {
+  const {data}=useGetMeQuery(undefined)
+  // console.log(data.user.role);
+
   return (
     <header className="border-b">
       <div className="container mx-auto px-4 flex h-16 items-center justify-between gap-4">
@@ -43,7 +52,6 @@ export default function Navbar() {
                   strokeWidth="2"
                   strokeLinecap="round"
                   strokeLinejoin="round"
-                  xmlns="http://www.w3.org/2000/svg"
                 >
                   <path
                     d="M4 12L20 12"
@@ -64,47 +72,73 @@ export default function Navbar() {
               <NavigationMenu className="max-w-none *:w-full">
                 <NavigationMenuList className="flex-col items-start gap-0 md:gap-2">
                   {navigationLinks.map((link, index) => (
-                    <NavigationMenuItem key={index} className="w-full">
-                      <Link
-                        to={link.href}
-                        className="py-1.5"
-                      >
-                        {link.label}
-                      </Link>
-                    </NavigationMenuItem>
-                  ))} 
+                    <>
+                  {link.role === "PUBLIC" && (<NavigationMenuItem key={index}>
+                    <Link
+                      to={link.href}
+                      className="text-muted-foreground hover:text-foreground py-1.5 font-medium p-2"
+                    >
+                      {link.label}
+                    </Link>
+                  </NavigationMenuItem>)}
+                  {link.role === data?.user?.role && (<NavigationMenuItem key={index}>
+                    <Link
+                      to={link.href}
+                      className="text-muted-foreground hover:text-foreground py-1.5 font-medium p-2"
+                    >
+                      {link.label}
+                    </Link>
+                  </NavigationMenuItem>)}
+                  </>
+                  ))}
                 </NavigationMenuList>
               </NavigationMenu>
             </PopoverContent>
           </Popover>
+
           {/* Main nav */}
           <div className="flex items-center gap-6">
             <Link to="/" className="text-primary hover:text-primary/90">
               <Logo />
             </Link>
-            {/* Navigation menu */}
             <NavigationMenu className="max-md:hidden">
               <NavigationMenuList className="gap-2">
                 {navigationLinks.map((link, index) => (
-                  <NavigationMenuItem key={index}>
+                  <>
+                  {link.role === "PUBLIC" && (<NavigationMenuItem key={index}>
                     <Link
                       to={link.href}
-                      className="text-muted-foreground hover:text-foreground py-1.5 font-medium  p-2"
+                      className="text-muted-foreground hover:text-foreground py-1.5 font-medium p-2"
                     >
                       {link.label}
                     </Link>
-                  </NavigationMenuItem>
+                  </NavigationMenuItem>)}
+                  {link.role === data?.user?.role && (<NavigationMenuItem key={index}>
+                    <Link
+                      to={link.href}
+                      className="text-muted-foreground hover:text-foreground py-1.5 font-medium p-2"
+                    >
+                      {link.label}
+                    </Link>
+                  </NavigationMenuItem>)}
+                  </>
                 ))}
               </NavigationMenuList>
             </NavigationMenu>
           </div>
         </div>
+
         {/* Right side */}
         <div className="flex items-center gap-2">
           <ModeToggle />
-          <Button asChild variant="ghost" size="sm" className="text-sm">
-            <Link to="/login">Login</Link>
-          </Button>
+         
+          { data ? (
+            <LogoutButton/>
+          )
+          : (<Button asChild variant="ghost" size="sm" className="text-sm border border-white">
+              <Link to="/login">Login</Link>
+            </Button>)}
+          
         </div>
       </div>
     </header>

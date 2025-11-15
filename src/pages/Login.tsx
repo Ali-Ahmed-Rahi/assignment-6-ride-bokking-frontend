@@ -1,4 +1,4 @@
-import BookingLogin from "@/assets/images/Authentication.jpg"; 
+import BookingLogin from "../assets/Images/authentication.jpg"; 
 import { LoginForm } from "@/components/modules/Authentication/LoginFrom";
 
 export default function Login() {

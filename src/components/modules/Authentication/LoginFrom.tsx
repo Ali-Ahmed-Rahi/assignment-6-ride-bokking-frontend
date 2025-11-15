@@ -13,11 +13,12 @@ import { useLoginMutation } from "@/redux/features/auth/auth.api";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { loginFormSchema, LoginFormValues } from "@/components/modules/Authentication/schemas/loginFormSchema";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import { toast } from "sonner";
 
 export function LoginForm({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
   const [login] = useLoginMutation();
+  const navigate=useNavigate()
 
   const form = useForm<LoginFormValues>({
     resolver: zodResolver(loginFormSchema),
@@ -35,6 +36,7 @@ export function LoginForm({ className, ...props }: React.HTMLAttributes<HTMLDivE
       const result = await login(data).unwrap();
       toast.success("Login successful");
       console.log("Login result:", result);
+      navigate("/")
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       const status = err?.status;

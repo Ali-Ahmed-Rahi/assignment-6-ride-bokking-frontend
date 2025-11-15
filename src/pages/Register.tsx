@@ -1,4 +1,4 @@
-import BookingRegister from "@/assets/images/Authentication.jpg";
+import BookingRegister from "../assets/Images/authentication.jpg"
 import { RegisterForm } from "@/components/modules/Authentication/RegisterFrom"
 
 export default function Register() {

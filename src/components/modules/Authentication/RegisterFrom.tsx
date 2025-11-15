@@ -56,8 +56,8 @@ export function RegisterForm({
     try {
       const result = await register(userInfo).unwrap();
       console.log(result);
-      toast.success("User Created Successfully");
-      navigate("/")
+      toast.success("User Registered Successfully");
+      navigate("/login")
       
     } catch (error) {
       console.log(error);

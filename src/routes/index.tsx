@@ -1,8 +1,17 @@
 import App from "@/App";
+import DashBoardLayout from "@/components/layout/DashBoardLayout";
 import About from "@/pages/About";
 import Login from "@/pages/Login";
 import Register from "@/pages/Register";
-import { createBrowserRouter } from "react-router";
+import { generateRoutes } from "@/utils/generateRoutes";
+import { createBrowserRouter, Navigate } from "react-router";
+import { adminSidebarItems } from "./adminSidebarItems";
+import { driverSidebarItems } from "./driverSidebarItems";
+import { riderSidebarItems } from "./riderSidebarItems";
+import { withAuth } from "@/utils/withAuth";
+import Unauthorized from "@/pages/Unauthorised";
+import { TRole } from "@/types";
+import { role } from "@/constants/role";
 
 export const router = createBrowserRouter([
   {
@@ -10,17 +19,38 @@ export const router = createBrowserRouter([
     path: "/",
     children: [
       {
-        Component: About,
+        Component: withAuth(About),
         path: "about",
       },
     ],
   },
   {
-    Component:Login,
-    path:"/login"
+    Component: withAuth(DashBoardLayout, role.admin as TRole),
+    path: "/admin",
+    children: [
+      { index:true,element:<Navigate to='/admin/drivers'/>},
+      ...generateRoutes(adminSidebarItems)],
   },
   {
-    Component:Register,
-    path:"/register"
-  }
+    Component: withAuth(DashBoardLayout,role.driver as TRole),
+    path: "/driver",
+    children: [{ index:true,element:<Navigate to='/driver/rides'/>},...generateRoutes(driverSidebarItems)],
+  },
+  {
+    Component: withAuth(DashBoardLayout,role.rider as TRole),
+    path: "/rider",
+    children: [{ index:true,element:<Navigate to='/rides/request'/>},...generateRoutes(riderSidebarItems)],
+  },
+  {
+    Component: Login,
+    path: "/login",
+  },
+  {
+    Component: Register,
+    path: "/register",
+  },
+  {
+    Component: Unauthorized,
+    path: "/unauthorized",
+  },
 ]);

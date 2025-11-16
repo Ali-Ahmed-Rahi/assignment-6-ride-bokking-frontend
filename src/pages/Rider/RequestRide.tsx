@@ -6,7 +6,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Loader2 } from "lucide-react";
 import { useRequestRideMutation } from "@/redux/features/rider/riderApi";
 
-export default function RideRequest() {
+export default function RequestRide() {
   const [pickup, setPickup] = useState("");
   const [destination, setDestination] = useState("");
   const [fareEstimate, setFareEstimate] = useState(0);

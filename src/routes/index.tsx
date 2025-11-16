@@ -32,14 +32,14 @@ export const router = createBrowserRouter([
       ...generateRoutes(adminSidebarItems)],
   },
   {
+    Component: withAuth(DashBoardLayout,role.rider as TRole),
+    path: "/rider",
+    children: [{ index:true,element:<Navigate to='/rider/rides/request'/>},...generateRoutes(riderSidebarItems)],
+  },
+  {
     Component: withAuth(DashBoardLayout,role.driver as TRole),
     path: "/driver",
     children: [{ index:true,element:<Navigate to='/driver/rides'/>},...generateRoutes(driverSidebarItems)],
-  },
-  {
-    Component: withAuth(DashBoardLayout,role.rider as TRole),
-    path: "/rider",
-    children: [{ index:true,element:<Navigate to='/rides/request'/>},...generateRoutes(riderSidebarItems)],
   },
   {
     Component: Login,

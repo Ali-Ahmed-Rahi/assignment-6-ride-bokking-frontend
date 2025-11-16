@@ -7,19 +7,19 @@ export const riderApi = baseApi.injectEndpoints({
     // ------------------- Rider Actions -------------------
     requestRide: builder.mutation({
       query: (rideInfo) => ({
-        url: "/rides/request",
+        url: "/rider/rides/request",
         method: "POST",
         data: rideInfo,
       }),
     }),
     cancelRide: builder.mutation({
       query: ({ id }) => ({
-        url: `/rides/${id}/cancel`,
+        url: `/rider/rides/${id}/cancel`,
         method: "PATCH",
       }),
     }),
     getMyRides: builder.query({
-      query: () => ({ url: "/rides/me", method: "GET" }),
+      query: () => ({ url: "/rider/rides/me", method: "GET" }),
     }),
 
     // ------------------- Admin Actions for Riders/Users -------------------
